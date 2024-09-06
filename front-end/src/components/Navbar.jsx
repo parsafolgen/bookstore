@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Login } from "./Login";
+import { useAuth } from "../context/AuthProvider";
+import { LogOut } from "./LogOut";
 
 export const Navbar = () => {
+  const [AuthUser , setAuthUser] = useAuth();
+
   const [theme , setTheme] = useState(localStorage.getItem("theme")?localStorage.getItem("theme"):"light")
   const element = document.documentElement;
   useEffect(()=>{
@@ -145,11 +149,15 @@ export const Navbar = () => {
               </label>
             </div>
             <div className="navbar-end">
-              <a className="bg-black text-white py-2 px-3 rounded-md text-sm cursor-pointer"
-              onClick={() => document.getElementById("my_modal_3").showModal()}
+              {AuthUser
+              ?<LogOut />
+              :<a className="bg-black text-white py-2 px-3 rounded-md text-sm cursor-pointer"
+                onClick={() => document.getElementById("my_modal_3").showModal()}
               >
                 Login
               </a>
+              }
+              
               <Login />
             </div>
           </div>

@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Login } from "./Login";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export const Signup = () => {
   const {
@@ -10,7 +12,29 @@ export const Signup = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+    await axios
+      .post("http://localhost:4001/user/signup", userInfo)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data) {
+            toast.success("successful")
+            window.location.assign("/")
+          }
+          localStorage.setItem("Users", JSON.stringify(res.data.user));
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err);
+            toast.error("Error :" + err.response.data.message)
+          }
+        });
+  };
   return (
     <>
       <div className="text-xs sm:text-base flex items-center justify-center w-full h-[790px] bg-slate-200 text-slate-900 dark:bg-slate-900 dark:text-white">
